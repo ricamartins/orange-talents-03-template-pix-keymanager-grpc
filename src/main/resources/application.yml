@@ -1,0 +1,11 @@
+micronaut:
+  application:
+    name: keymanager
+datasources:
+  default:
+    url: ${DB_URL:`jdbc:mysql://localhost:3306/db_keymanager?createDatabaseIfNotExist=true&serverTimezone=UTC`}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:zupper010321}
+    dialect: MYSQL
+jpa.default.properties.hibernate.hbm2ddl.auto: update
