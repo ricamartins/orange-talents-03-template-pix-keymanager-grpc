@@ -1,6 +1,7 @@
 micronaut:
   application:
     name: keymanager
+
 datasources:
   default:
     url: ${DB_URL:`jdbc:mysql://localhost:3306/db_keymanager?createDatabaseIfNotExist=true&serverTimezone=UTC`}
@@ -9,3 +10,12 @@ datasources:
     password: ${DB_PASSWORD:zupper010321}
     dialect: MYSQL
 jpa.default.properties.hibernate.hbm2ddl.auto: update
+
+grpc:
+  server:
+    port: 50051
+    keep-alive-time: 3h
+    max-inbound-message-size: 1024
+
+client:
+  erp.url: ${ERP_URL:`http://localhost:9091/api/v1`}

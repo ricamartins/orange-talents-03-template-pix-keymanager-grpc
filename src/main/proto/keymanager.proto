@@ -1,20 +1,55 @@
 syntax = "proto3";
 
 option java_multiple_files = true;
-option java_package = "com.zup.keymanager";
-option java_outer_classname = "Keymanager";
-option objc_class_prefix = "HLW";
+option java_package = "com.zup.keymanager.proto";
+option java_outer_classname = "KeymanagerOuterClass";
+//option objc_class_prefix = "HLW";
 
-package com.zup.keymanager;
+package com.zup.keymanager.proto;
 
-service KeymanagerService {
-  rpc send (KeymanagerRequest) returns (KeymanagerReply) {}
+service PixKeyService {
+  rpc create (PixKeyRequest) returns (PixKeyResult) {}
 }
 
-message KeymanagerRequest {
-  string name = 1;
+message PixKeyRequest {
+  string clientId = 1;
+  KeyType keyType = 2;
+  string keyValue = 3;
+  AccountType accountType = 4;
+
+  enum KeyType {
+    UNKNOWN_KEY_TYPE = 0;
+    DOCUMENT = 1;
+    PHONE = 2;
+    EMAIL = 3;
+    RANDOM = 4;
+  }
+
+  enum AccountType {
+    UNKNOWN_ACCOUNT_TYPE = 0;
+    CHECKING = 1;
+    SAVINGS = 2;
+  }
 }
 
-message KeymanagerReply {
-  string message = 1;
+message PixKeyResponse {
+  string clientId = 1;
+  string pixId = 2;
+}
+
+message ErrorResponse {
+  string status = 1;
+  repeated FieldError errors = 2;
+}
+
+message FieldError {
+  string field = 1;
+  string message = 2;
+}
+
+message PixKeyResult {
+  oneof result {
+    PixKeyResponse success = 1;
+    ErrorResponse failure = 2;
+  }
 }
