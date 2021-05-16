@@ -1,4 +1,4 @@
-package com.zup.keymanager.validations
+package com.zup.keymanager.validations.annotations
 
 import javax.validation.Constraint
 import javax.validation.constraints.Pattern

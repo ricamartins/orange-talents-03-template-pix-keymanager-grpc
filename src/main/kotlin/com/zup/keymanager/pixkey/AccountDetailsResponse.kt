@@ -1,12 +1,14 @@
 package com.zup.keymanager.pixkey
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class AccountDetailsResponse(
-    val agencia: String,
-    val numero: String,
-    val instituicao: BankDetailsResponse,
-    val titular: OwnerDetailsResponse
+    @JsonProperty("agencia") val branch: String,
+    @JsonProperty("numero") val number: String,
+    @JsonProperty("instituicao") val bankDetails: BankDetailsResponse,
+    @JsonProperty("titular") val ownerDetails: OwnerDetailsResponse
 ) {
-    fun toAccountDetails() = AccountDetails(agencia, numero, instituicao.nome, titular.nome)
+    fun toAccountDetails() = AccountDetails(branch, number, bankDetails.nome, ownerDetails.nome)
 }
 
 data class BankDetailsResponse(val nome: String)

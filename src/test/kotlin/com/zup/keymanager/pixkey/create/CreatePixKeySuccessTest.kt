@@ -1,14 +1,11 @@
-package com.zup.keymanager.pixkey
+package com.zup.keymanager.pixkey.create
 
-import com.zup.keymanager.pixkey.PixKeyServiceTestSetup.*
-import com.zup.keymanager.proto.PixKeyRequest
+import com.zup.keymanager.pixkey.ErpClient
+import com.zup.keymanager.pixkey.PixKeyRepository
 import com.zup.keymanager.proto.PixKeyServiceGrpc.PixKeyServiceBlockingStub
-import com.zup.keymanager.proto.PixKeyServiceGrpc.newBlockingStub
-import io.grpc.ManagedChannel
-import io.micronaut.context.annotation.Bean
-import io.micronaut.context.annotation.Factory
-import io.micronaut.grpc.annotation.GrpcChannel
-import io.micronaut.grpc.server.GrpcServerChannel
+import com.zup.keymanager.setup.PixKeyCreateServiceTestSetup
+import com.zup.keymanager.setup.options.ErpClientMockOption.OK_RESPONSE
+import com.zup.keymanager.setup.options.PixKeyCreateRequestOption.*
 import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,21 +14,18 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 
 @MicronautTest(transactional=false)
-internal class PixKeyServiceSuccessTest(
+class CreatePixKeySuccessTest(
     private val repository: PixKeyRepository,
     private val grpcClient: PixKeyServiceBlockingStub,
-    private val setup: PixKeyServiceTestSetup
+    private val setup: PixKeyCreateServiceTestSetup
 ) {
 
-    lateinit var request: PixKeyRequest
-
     @Test
-    fun `should register pix key with document key type`() {
+    fun `should register pix key with valid document key type`() {
 
-        request = setup.options(
-            Database.CLEAN_ALL,
-            Request.VALID_WITH_DOCUMENT_KEY_TYPE,
-            Mock.OK_RESPONSE
+        val request = setup.options(
+            requestOption = VALID_WITH_DOCUMENT_KEY_TYPE,
+            erpClientOption = OK_RESPONSE
         )
 
         val result = grpcClient.create(request)
@@ -44,12 +38,11 @@ internal class PixKeyServiceSuccessTest(
     }
 
     @Test
-    fun `should register pix key with phone key type`() {
+    fun `should register pix key with valid phone key type`() {
 
-        request = setup.options(
-            Database.CLEAN_ALL,
-            Request.VALID_WITH_PHONE_KEY_TYPE,
-            Mock.OK_RESPONSE
+        val request = setup.options(
+            requestOption = VALID_WITH_PHONE_KEY_TYPE,
+            erpClientOption = OK_RESPONSE
         )
 
         val result = grpcClient.create(request)
@@ -62,12 +55,11 @@ internal class PixKeyServiceSuccessTest(
     }
 
     @Test
-    fun `should register pix key with email key type`() {
+    fun `should register pix key with valid email key type`() {
 
-        request = setup.options(
-            Database.CLEAN_ALL,
-            Request.VALID_WITH_EMAIL_KEY_TYPE,
-            Mock.OK_RESPONSE
+        val request = setup.options(
+            requestOption = VALID_WITH_EMAIL_KEY_TYPE,
+            erpClientOption = OK_RESPONSE
         )
 
         val result = grpcClient.create(request)
@@ -80,12 +72,11 @@ internal class PixKeyServiceSuccessTest(
     }
 
     @Test
-    fun `should register pix key with random key type`() {
+    fun `should register pix key with valid random key type`() {
 
-        request = setup.options(
-            Database.CLEAN_ALL,
-            Request.VALID_WITH_RANDOM_KEY_TYPE,
-            Mock.OK_RESPONSE
+        val request = setup.options(
+            requestOption = VALID_WITH_RANDOM_KEY_TYPE,
+            erpClientOption = OK_RESPONSE
         )
 
         val result = grpcClient.create(request)
@@ -100,9 +91,4 @@ internal class PixKeyServiceSuccessTest(
     @MockBean(ErpClient::class)
     fun erpClient() = Mockito.mock(ErpClient::class.java)
 
-    @Factory
-    class Clients() {
-        @Bean
-        fun clientStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel) = newBlockingStub(channel)
-    }
 }

@@ -6,6 +6,7 @@ import com.zup.keymanager.proto.ErrorResponse
 import com.zup.keymanager.proto.PixKeyRequest
 import com.zup.keymanager.proto.PixKeyResponse
 import com.zup.keymanager.proto.PixKeyResult
+import io.grpc.Status
 import java.util.*
 
 fun PixKeyRequest.toPixKey(accountDetailsResponse: AccountDetailsResponse): PixKey {
@@ -29,6 +30,11 @@ fun PixKeyRequest.AccountType.translate(): String {
 
 fun toPixKeyResponse(pixKey: PixKey): PixKeyResponse {
     return PixKeyResponse.newBuilder().setClientId(pixKey.clientId).setPixId(pixKey.id).build()
+}
+
+fun toPixKeyResult(u: Unit): PixKeyResult {
+    return PixKeyResult.newBuilder().setStatus(Status.OK.formatted())
+        .setSuccess(PixKeyResponse.newBuilder().build()).build()
 }
 
 fun toPixKeyResult(pixKeyResponse: PixKeyResponse): PixKeyResult {

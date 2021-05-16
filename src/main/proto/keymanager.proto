@@ -9,6 +9,7 @@ package com.zup.keymanager.proto;
 
 service PixKeyService {
   rpc create (PixKeyRequest) returns (PixKeyResult) {}
+  rpc delete (PixKeyDeleteRequest) returns (PixKeyResult) {}
 }
 
 message PixKeyRequest {
@@ -32,6 +33,11 @@ message PixKeyRequest {
   }
 }
 
+message PixKeyDeleteRequest {
+  string clientId = 1;
+  string pixId = 2;
+}
+
 message PixKeyResponse {
   string clientId = 1;
   string pixId = 2;
@@ -48,8 +54,9 @@ message FieldError {
 }
 
 message PixKeyResult {
+  string status = 1;
   oneof result {
-    PixKeyResponse success = 1;
-    ErrorResponse failure = 2;
+    PixKeyResponse success = 2;
+    ErrorResponse failure = 3;
   }
 }

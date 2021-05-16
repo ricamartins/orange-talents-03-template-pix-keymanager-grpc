@@ -4,6 +4,7 @@ import com.zup.keymanager.extensions.with
 import com.zup.keymanager.proto.ErrorResponse
 import com.zup.keymanager.proto.PixKeyRequest
 import com.zup.keymanager.proto.PixKeyRequest.KeyType
+import com.zup.keymanager.validations.annotations.*
 import io.grpc.Status
 import io.micronaut.validation.Validated
 import org.hibernate.validator.constraints.br.CPF
@@ -15,21 +16,21 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Validated @Singleton
-class PixKeyRequestValidator : Validator<PixKeyRequest> {
+class PixKeyCreateRequestValidator : CustomStatusValidator<PixKeyRequest> {
 
-    override fun validateConstructor(target: PixKeyRequest) {
-        with(target) { validateWithConstructor(clientId, keyType, keyValue, accountType) }
+    override fun validateIllegalArguments(target: PixKeyRequest) {
+        validateIllegalArguments(target.clientId, target.keyType, target.keyValue, target.accountType)
     }
 
-    override fun validateWithCustomStatus(target: PixKeyRequest) {
-        with(target) { validateUniqueKey(keyValue) }
+    override fun customStatusValidations(target: PixKeyRequest): List<() -> Unit> {
+        return listOf { validateUniqueKey(target.keyValue) }
     }
 
-    override fun toCustomError(e: ConstraintViolationException): ErrorResponse {
-        return Status.ALREADY_EXISTS with ("keyValue" to "Key value is already registered")
+    override fun customErrorMappers(): List<(ConstraintViolationException) -> ErrorResponse> {
+        return listOf { Status.ALREADY_EXISTS with ("keyValue" to "Key value is already registered") }
     }
 
-    fun validateWithConstructor(
+    fun validateIllegalArguments(
         @NotBlank @ValidUUID clientId: String,
         @NotNull @ValidKeyType keyType: KeyType,
         @Size(max=77) keyValue: String,
@@ -49,4 +50,5 @@ class PixKeyRequestValidator : Validator<PixKeyRequest> {
     fun validateRandom(@Blank keyValue: String) {}
 
     fun validateUniqueKey(@Unique keyValue: String) {}
+
 }

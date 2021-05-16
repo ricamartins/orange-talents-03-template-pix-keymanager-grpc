@@ -1,38 +1,24 @@
-package com.zup.keymanager.pixkey
+package com.zup.keymanager.pixkey.create
 
-import com.zup.keymanager.pixkey.PixKeyServiceTestSetup.*
-import com.zup.keymanager.proto.PixKeyRequest
 import com.zup.keymanager.proto.PixKeyServiceGrpc.PixKeyServiceBlockingStub
-import com.zup.keymanager.proto.PixKeyServiceGrpc.newBlockingStub
-import io.grpc.ManagedChannel
-import io.micronaut.context.annotation.Bean
-import io.micronaut.context.annotation.Factory
-import io.micronaut.grpc.annotation.GrpcChannel
-import io.micronaut.grpc.server.GrpcServerChannel
+import com.zup.keymanager.setup.PixKeyCreateServiceTestSetup
+import com.zup.keymanager.setup.options.PixKeyCreateRequestOption.*
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 @MicronautTest(transactional=false)
-class PixKeyServiceValidationTest(
+class CreatePixKeyValidationTest(
     private val grpcClient: PixKeyServiceBlockingStub,
-    private val setup: PixKeyServiceTestSetup
+    private val setup: PixKeyCreateServiceTestSetup
 ) {
 
-    lateinit var request: PixKeyRequest
-
-    @Nested
-    inner class ClientId {}
-
     @Test
-    fun `should return error message when invalid UUID`() {
+    fun `should return error message when client id is invalid UUID`() {
 
-        request = setup.options(
-            Database.NOTHING,
-            Request.INVALID_CLIENT_ID_UUID_FORMAT,
-            Mock.NOTHING
+        val request = setup.options(
+            requestOption = INVALID_CLIENT_ID_UUID_FORMAT,
         )
 
         val result = grpcClient.create(request)
@@ -45,16 +31,12 @@ class PixKeyServiceValidationTest(
         }
     }
 
-    @Nested
-    inner class KeyType {}
 
     @Test
     fun `should return error message when key type is null`() {
 
-        request = setup.options(
-            Database.NOTHING,
-            Request.INVALID_KEY_TYPE_NULL,
-            Mock.NOTHING
+        val request = setup.options(
+            requestOption = INVALID_KEY_TYPE_NULL
         )
 
         val result = grpcClient.create(request)
@@ -68,16 +50,12 @@ class PixKeyServiceValidationTest(
 
     }
 
-    @Nested
-    inner class KeyValue {}
 
     @Test
-    fun `should return error message when key value size greater than 77`() {
+    fun `should return error message when key value size is greater than 77`() {
 
-        request = setup.options(
-            Database.NOTHING,
-            Request.INVALID_KEY_VALUE_GREATER_THAN_77,
-            Mock.NOTHING
+        val request = setup.options(
+            requestOption = INVALID_KEY_VALUE_GREATER_THAN_77
         )
 
         val result = grpcClient.create(request)
@@ -94,10 +72,8 @@ class PixKeyServiceValidationTest(
     @Test
     fun `with document key type, should return error message when invalid document`() {
 
-        request = setup.options(
-            Database.NOTHING,
-            Request.INVALID_KEY_VALUE_DOCUMENT,
-            Mock.NOTHING
+        val request = setup.options(
+            requestOption = INVALID_KEY_VALUE_DOCUMENT
         )
 
         val result = grpcClient.create(request)
@@ -115,10 +91,8 @@ class PixKeyServiceValidationTest(
     @Test
     fun `with phone key type, should return error message when invalid phone number`() {
 
-        request = setup.options(
-            Database.NOTHING,
-            Request.INVALID_KEY_VALUE_PHONE,
-            Mock.NOTHING
+        val request = setup.options(
+            requestOption = INVALID_KEY_VALUE_PHONE
         )
 
         val result = grpcClient.create(request)
@@ -135,10 +109,8 @@ class PixKeyServiceValidationTest(
     @Test
     fun `with email key type, should return error message when invalid email`() {
 
-        request = setup.options(
-            Database.NOTHING,
-            Request.INVALID_KEY_VALUE_EMAIL,
-            Mock.NOTHING
+        val request = setup.options(
+            requestOption = INVALID_KEY_VALUE_EMAIL
         )
 
         val result = grpcClient.create(request)
@@ -155,10 +127,8 @@ class PixKeyServiceValidationTest(
     @Test
     fun `with random key type, should return error message when key value is not blank or null`() {
 
-        request = setup.options(
-            Database.NOTHING,
-            Request.INVALID_KEY_VALUE_NOT_BLANK_FOR_RANDOM_TYPE,
-            Mock.NOTHING
+        val request = setup.options(
+            requestOption = INVALID_KEY_VALUE_NOT_BLANK_FOR_RANDOM_TYPE
         )
 
         val result = grpcClient.create(request)
@@ -173,16 +143,11 @@ class PixKeyServiceValidationTest(
     }
 
 
-    @Nested
-    inner class AccountType {}
-
     @Test
-    fun `should return error message when account type null`() {
+    fun `should return error message when account type is null`() {
 
-        request = setup.options(
-            Database.NOTHING,
-            Request.INVALID_ACCOUNT_TYPE_NULL,
-            Mock.NOTHING
+        val request = setup.options(
+            requestOption = INVALID_ACCOUNT_TYPE_NULL
         )
 
         val result = grpcClient.create(request)
@@ -196,9 +161,4 @@ class PixKeyServiceValidationTest(
 
     }
 
-    @Factory
-    class Clients() {
-        @Bean
-        fun clientStub(@GrpcChannel(GrpcServerChannel.NAME) channel: ManagedChannel) = newBlockingStub(channel)
-    }
 }

@@ -26,6 +26,7 @@ micronaut {
 }
 
 dependencies {
+    annotationProcessor("io.micronaut:micronaut-inject-java:2.5.3")
     kapt("io.micronaut.data:micronaut-data-processor")
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")

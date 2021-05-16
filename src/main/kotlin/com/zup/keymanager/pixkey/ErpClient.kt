@@ -19,7 +19,7 @@ import javax.inject.Singleton
 interface ErpClient {
 
     @Get("/clientes/{clientId}/contas")
-    fun getAccountDetails(@PathVariable clientId: String, @QueryValue tipo: String): HttpResponse<AccountDetailsResponse>
+    fun getAccountDetails(@PathVariable clientId: String, @QueryValue("tipo") type: String): HttpResponse<AccountDetailsResponse>
 }
 
 @Singleton
