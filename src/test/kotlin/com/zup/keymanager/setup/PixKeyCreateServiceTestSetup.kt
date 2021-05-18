@@ -2,7 +2,7 @@ package com.zup.keymanager.setup
 
 import com.zup.keymanager.pixkey.ErpClient
 import com.zup.keymanager.pixkey.PixKeyRepository
-import com.zup.keymanager.proto.PixKeyRequest
+import com.zup.keymanager.proto.PixKeyCreateRequest
 import com.zup.keymanager.setup.options.*
 import javax.inject.Singleton
 
@@ -18,7 +18,7 @@ class PixKeyCreateServiceTestSetup(
         repositoryOption: PixKeyRepositoryOption = PixKeyRepositoryOption.CLEAN_ALL,
         accountOption: AccountDetailsResponseOption = AccountDetailsResponseOption.ANY,
         scenarioOption: PixKeyCreateScenarioOption = PixKeyCreateScenarioOption.NOTHING
-    ): PixKeyRequest {
+    ): PixKeyCreateRequest {
 
         if (scenarioOption.isChosen())
             return scenarioOption.apply(repository)!!

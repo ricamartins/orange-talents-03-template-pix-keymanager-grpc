@@ -2,14 +2,11 @@ package com.zup.keymanager.extensions
 
 import com.zup.keymanager.pixkey.AccountDetailsResponse
 import com.zup.keymanager.pixkey.PixKey
-import com.zup.keymanager.proto.ErrorResponse
-import com.zup.keymanager.proto.PixKeyRequest
-import com.zup.keymanager.proto.PixKeyResponse
-import com.zup.keymanager.proto.PixKeyResult
+import com.zup.keymanager.proto.*
 import io.grpc.Status
 import java.util.*
 
-fun PixKeyRequest.toPixKey(accountDetailsResponse: AccountDetailsResponse): PixKey {
+fun PixKeyCreateRequest.toPixKey(accountDetailsResponse: AccountDetailsResponse): PixKey {
     return PixKey(
         UUID.randomUUID().toString(),
         clientId,
@@ -20,7 +17,7 @@ fun PixKeyRequest.toPixKey(accountDetailsResponse: AccountDetailsResponse): PixK
     )
 }
 
-fun PixKeyRequest.AccountType.translate(): String {
+fun PixKeyCreateRequest.AccountType.translate(): String {
     return when (this.name) {
         "CHECKING" -> "CONTA_CORRENTE"
         "SAVINGS" -> "CONTA_POUPANCA"
@@ -28,19 +25,8 @@ fun PixKeyRequest.AccountType.translate(): String {
     }
 }
 
-fun toPixKeyResponse(pixKey: PixKey): PixKeyResponse {
-    return PixKeyResponse.newBuilder().setClientId(pixKey.clientId).setPixId(pixKey.id).build()
+fun toPixKeyCreateResponse(pixKey: PixKey): PixKeyCreateResponse {
+    return PixKeyCreateResponse.newBuilder().setClientId(pixKey.clientId).setPixId(pixKey.id).build()
 }
 
-fun toPixKeyResult(u: Unit): PixKeyResult {
-    return PixKeyResult.newBuilder().setStatus(Status.OK.formatted())
-        .setSuccess(PixKeyResponse.newBuilder().build()).build()
-}
-
-fun toPixKeyResult(pixKeyResponse: PixKeyResponse): PixKeyResult {
-    return PixKeyResult.newBuilder().setSuccess(pixKeyResponse).build()
-}
-
-fun toPixKeyResult(errorResponse: ErrorResponse): PixKeyResult {
-    return PixKeyResult.newBuilder().setFailure(errorResponse).build()
-}
+fun void(): Void = Void.newBuilder().build()

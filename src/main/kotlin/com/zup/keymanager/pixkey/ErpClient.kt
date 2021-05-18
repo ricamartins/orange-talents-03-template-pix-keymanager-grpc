@@ -1,14 +1,11 @@
 package com.zup.keymanager.pixkey
 
-import com.github.michaelbull.result.Err
-import com.github.michaelbull.result.Ok
-import com.github.michaelbull.result.Result
 import com.zup.keymanager.extensions.translate
 import com.zup.keymanager.extensions.with
-import com.zup.keymanager.proto.ErrorResponse
-import com.zup.keymanager.proto.PixKeyRequest
+import com.zup.keymanager.proto.PixKeyCreateRequest
 import io.grpc.Status
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.PathVariable
 import io.micronaut.http.annotation.QueryValue
@@ -25,13 +22,13 @@ interface ErpClient {
 @Singleton
 class ErpClientHandler(private val client: ErpClient) {
 
-    fun getAccountDetails(request: PixKeyRequest): Result<AccountDetailsResponse, ErrorResponse> {
+    fun getAccountDetails(request: PixKeyCreateRequest): AccountDetailsResponse {
         val response = client.getAccountDetails(request.clientId, request.accountType.translate())
-        return when (response.status.name) {
-            "OK" -> Ok(response.body.get())
-            "NOT_FOUND" -> Err(Status.NOT_FOUND with ("client" to "Client or account does not exists"))
-            else -> Err(Status.INTERNAL with "Something went wrong")
-        }
+
+        if (response.status == HttpStatus.NOT_FOUND)
+            throw Status.NOT_FOUND with "Client or account does not exists"
+
+        return response.body()!!
     }
 
 }

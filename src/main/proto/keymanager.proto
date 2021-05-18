@@ -8,11 +8,11 @@ option java_outer_classname = "KeymanagerOuterClass";
 package com.zup.keymanager.proto;
 
 service PixKeyService {
-  rpc create (PixKeyRequest) returns (PixKeyResult) {}
-  rpc delete (PixKeyDeleteRequest) returns (PixKeyResult) {}
+  rpc create (PixKeyCreateRequest) returns (PixKeyCreateResponse) {}
+  rpc delete (PixKeyDeleteRequest) returns (Void) {}
 }
 
-message PixKeyRequest {
+message PixKeyCreateRequest {
   string clientId = 1;
   KeyType keyType = 2;
   string keyValue = 3;
@@ -33,30 +33,40 @@ message PixKeyRequest {
   }
 }
 
+message PixKeyCreateResponse {
+  string clientId = 1;
+  string pixId = 2;
+}
+
 message PixKeyDeleteRequest {
   string clientId = 1;
   string pixId = 2;
 }
 
-message PixKeyResponse {
-  string clientId = 1;
-  string pixId = 2;
-}
+message Void {}
 
-message ErrorResponse {
-  string status = 1;
-  repeated FieldError errors = 2;
-}
-
-message FieldError {
-  string field = 1;
-  string message = 2;
-}
-
+//For client usage only, unfortunately
 message PixKeyResult {
   string status = 1;
   oneof result {
-    PixKeyResponse success = 2;
-    ErrorResponse failure = 3;
+    Success success = 2;
+    Failure failure = 3;
+  }
+
+  message Success {
+    string message = 1;
+    oneof response {
+      PixKeyCreateResponse createResponse = 2;
+    }
+  }
+
+  message Failure {
+    string message = 1;
+    repeated FieldError errors = 2;
+
+    message FieldError {
+      string field = 1;
+      string message = 2;
+    }
   }
 }

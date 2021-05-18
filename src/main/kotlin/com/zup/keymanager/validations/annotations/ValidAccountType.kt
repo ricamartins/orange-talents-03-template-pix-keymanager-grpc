@@ -1,6 +1,6 @@
 package com.zup.keymanager.validations.annotations
 
-import com.zup.keymanager.proto.PixKeyRequest.*
+import com.zup.keymanager.proto.PixKeyCreateRequest.*
 import io.micronaut.core.annotation.AnnotationValue
 import io.micronaut.validation.validator.constraints.ConstraintValidator
 import io.micronaut.validation.validator.constraints.ConstraintValidatorContext

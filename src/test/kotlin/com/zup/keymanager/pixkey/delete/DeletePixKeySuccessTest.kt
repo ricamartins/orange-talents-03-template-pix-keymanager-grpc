@@ -2,6 +2,7 @@ package com.zup.keymanager.pixkey.delete
 
 import com.zup.keymanager.pixkey.PixKeyRepository
 import com.zup.keymanager.proto.PixKeyServiceGrpc.PixKeyServiceBlockingStub
+import com.zup.keymanager.setup.GrpcClientHandler
 import com.zup.keymanager.setup.PixKeyDeleteServiceTestSetup
 import com.zup.keymanager.setup.options.PixKeyDeleteScenarioOption.VALID_REQUEST_FOR_REGISTERED_PIX_KEY
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.Test
 @MicronautTest(transactional=false)
 class DeletePixKeySuccessTest(
     private val repository: PixKeyRepository,
-    private val grpcClient: PixKeyServiceBlockingStub,
+    private val grpcClient: GrpcClientHandler,
     private val setup: PixKeyDeleteServiceTestSetup
 ) {
 

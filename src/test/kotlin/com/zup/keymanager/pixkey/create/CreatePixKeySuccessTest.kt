@@ -3,6 +3,7 @@ package com.zup.keymanager.pixkey.create
 import com.zup.keymanager.pixkey.ErpClient
 import com.zup.keymanager.pixkey.PixKeyRepository
 import com.zup.keymanager.proto.PixKeyServiceGrpc.PixKeyServiceBlockingStub
+import com.zup.keymanager.setup.GrpcClientHandler
 import com.zup.keymanager.setup.PixKeyCreateServiceTestSetup
 import com.zup.keymanager.setup.options.ErpClientMockOption.OK_RESPONSE
 import com.zup.keymanager.setup.options.PixKeyCreateRequestOption.*
@@ -16,7 +17,7 @@ import org.mockito.Mockito
 @MicronautTest(transactional=false)
 class CreatePixKeySuccessTest(
     private val repository: PixKeyRepository,
-    private val grpcClient: PixKeyServiceBlockingStub,
+    private val grpcClient: GrpcClientHandler,
     private val setup: PixKeyCreateServiceTestSetup
 ) {
 
@@ -32,8 +33,8 @@ class CreatePixKeySuccessTest(
 
         with (result) {
             assertTrue(hasSuccess())
-            assertEquals(request.clientId, success.clientId)
-            assertTrue(repository.existsById(success.pixId))
+            assertEquals(request.clientId, success.createResponse.clientId)
+            assertTrue(repository.existsById(success.createResponse.pixId))
         }
     }
 
@@ -49,8 +50,8 @@ class CreatePixKeySuccessTest(
 
         with (result) {
             assertTrue(hasSuccess())
-            assertEquals(request.clientId, success.clientId)
-            assertTrue(repository.existsById(success.pixId))
+            assertEquals(request.clientId, success.createResponse.clientId)
+            assertTrue(repository.existsById(success.createResponse.pixId))
         }
     }
 
@@ -66,8 +67,8 @@ class CreatePixKeySuccessTest(
 
         with (result) {
             assertTrue(hasSuccess())
-            assertEquals(request.clientId, success.clientId)
-            assertTrue(repository.existsById(success.pixId))
+            assertEquals(request.clientId, success.createResponse.clientId)
+            assertTrue(repository.existsById(success.createResponse.pixId))
         }
     }
 
@@ -83,8 +84,8 @@ class CreatePixKeySuccessTest(
 
         with (result) {
             assertTrue(hasSuccess())
-            assertEquals(request.clientId, success.clientId)
-            assertTrue(repository.existsById(success.pixId))
+            assertEquals(request.clientId, success.createResponse.clientId)
+            assertTrue(repository.existsById(success.createResponse.pixId))
         }
     }
 

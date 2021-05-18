@@ -1,37 +1,27 @@
 package com.zup.keymanager.extensions
 
-import com.zup.keymanager.proto.ErrorResponse
-import com.zup.keymanager.proto.FieldError
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.grpc.Status
+import io.grpc.StatusRuntimeException
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import javax.validation.ConstraintViolation
 
-fun Set<ConstraintViolation<*>>.toFieldErrors(): List<FieldError> {
-    return this.map { it.field() to it.message}.map { it.toFieldError() }
+fun Throwable.toStatusException(): StatusRuntimeException {
+    return when(this) {
+        is StatusRuntimeException -> this
+        is HttpClientResponseException -> Status.INTERNAL with "Something went wrong"
+        else -> throw this
+    }
 }
 
-private fun Pair<String, String>.toFieldError(): FieldError {
-    return FieldError.newBuilder().setField(this.first).setMessage(this.second).build()
+fun Set<ConstraintViolation<*>>.toFieldErrors(): String {
+    return ObjectMapper().writeValueAsString(this.map { "${it.field()}: ${it.message}"})
 }
 
-private fun String.toErrorMessage(): FieldError {
-    return FieldError.newBuilder().setMessage(this).build()
-}
+private fun ConstraintViolation<*>.field() = this.propertyPath.iterator().asSequence().last().toString()
 
-fun ConstraintViolation<*>.field() = this.propertyPath.iterator().asSequence().last().toString()
-
-infix fun Status.with(fieldErrors: List<FieldError>): ErrorResponse {
-    return ErrorResponse.newBuilder()
-        .setStatus(this.formatted()).addAllErrors(fieldErrors).build()
-}
-
-infix fun Status.with(fieldErrorPair: Pair<String, String>): ErrorResponse {
-    return ErrorResponse.newBuilder()
-        .setStatus(this.formatted()).addErrors(fieldErrorPair.toFieldError()).build()
-}
-
-infix fun Status.with(message: String): ErrorResponse {
-    return ErrorResponse.newBuilder()
-        .setStatus(this.formatted()).addErrors(message.toErrorMessage()).build()
+infix fun Status.with(message: String): StatusRuntimeException {
+    return this.withDescription(message).asRuntimeException()
 }
 
 fun Status.formatted() = "${this.code.value()} ${this.code}"
