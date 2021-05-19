@@ -1,9 +1,7 @@
 package com.zup.keymanager.pixkey.delete
 
 import com.zup.keymanager.pixkey.PixKeyRepository
-import com.zup.keymanager.proto.PixKeyServiceGrpc.PixKeyServiceBlockingStub
 import com.zup.keymanager.setup.GrpcClientHandler
-import com.zup.keymanager.setup.PixKeyDeleteServiceTestSetup
 import com.zup.keymanager.setup.options.PixKeyDeleteScenarioOption.INVALID_REQUEST_NOT_FOUND
 import com.zup.keymanager.setup.options.PixKeyDeleteScenarioOption.INVALID_REQUEST_NOT_OWNER
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
@@ -14,15 +12,12 @@ import org.junit.jupiter.api.Test
 class DeletePixKeyFailureTest(
     private val repository: PixKeyRepository,
     private val grpcClient: GrpcClientHandler,
-    private val setup: PixKeyDeleteServiceTestSetup
 ) {
 
     @Test
     fun `should return not_found error message when pix id does not exists`() {
 
-        val request = setup.options(
-            scenarioOption = INVALID_REQUEST_NOT_FOUND
-        )
+        val request = INVALID_REQUEST_NOT_FOUND.apply(repository)
 
         val result = grpcClient.delete(request)
 
@@ -37,9 +32,7 @@ class DeletePixKeyFailureTest(
     @Test
     fun `should return permission_denied error message when pix key does not belong to client`() {
 
-        val request = setup.options(
-            scenarioOption = INVALID_REQUEST_NOT_OWNER
-        )
+        val request = INVALID_REQUEST_NOT_OWNER.apply(repository)
 
         val result = grpcClient.delete(request)
 

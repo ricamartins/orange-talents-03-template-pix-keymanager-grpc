@@ -14,12 +14,9 @@ enum class PixKeyDeleteRequestOption {
         override fun apply(pixKey: PixKey): PixKeyDeleteRequest {
             return create(UUID.randomUUID().toString(), pixKey.id)
         }
-    },
-    NOTHING {
-        override fun apply(pixKey: PixKey) = null
     };
 
-    abstract fun apply(pixKey: PixKey): PixKeyDeleteRequest?
+    abstract fun apply(pixKey: PixKey): PixKeyDeleteRequest
 
     fun create(clientId: String, pixId: String): PixKeyDeleteRequest {
         return with(PixKeyDeleteRequest.newBuilder()) {

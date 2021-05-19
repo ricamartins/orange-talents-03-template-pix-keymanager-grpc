@@ -19,3 +19,4 @@ grpc:
 
 client:
   erp.url: ${ERP_URL:`http://localhost:9091/api/v1`}
+  bcb.url: ${BCB_URL:`http://localhost:8082/api/v1/pix`}

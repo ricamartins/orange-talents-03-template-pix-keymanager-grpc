@@ -1,8 +1,8 @@
 package com.zup.keymanager.setup.options
 
 import com.zup.keymanager.extensions.translate
-import com.zup.keymanager.pixkey.AccountDetailsResponse
-import com.zup.keymanager.pixkey.ErpClient
+import com.zup.keymanager.pixkey.clients.AccountDetailsResponse
+import com.zup.keymanager.pixkey.clients.ErpClient
 import com.zup.keymanager.proto.PixKeyCreateRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.client.exceptions.HttpClientResponseException

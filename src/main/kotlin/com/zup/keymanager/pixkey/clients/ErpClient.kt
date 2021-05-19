@@ -1,4 +1,4 @@
-package com.zup.keymanager.pixkey
+package com.zup.keymanager.pixkey.clients
 
 import com.zup.keymanager.extensions.translate
 import com.zup.keymanager.extensions.with

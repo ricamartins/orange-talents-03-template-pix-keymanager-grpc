@@ -6,6 +6,6 @@ import javax.persistence.Embeddable
 class AccountDetails(
     val branch: String,
     val number: String,
-    val bankName: String,
+    val participant: String,
     val ownerName: String
 )

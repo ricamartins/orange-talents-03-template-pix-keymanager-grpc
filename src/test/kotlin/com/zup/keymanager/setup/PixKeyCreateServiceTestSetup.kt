@@ -1,7 +1,7 @@
 package com.zup.keymanager.setup
 
-import com.zup.keymanager.pixkey.ErpClient
 import com.zup.keymanager.pixkey.PixKeyRepository
+import com.zup.keymanager.pixkey.clients.ErpClient
 import com.zup.keymanager.proto.PixKeyCreateRequest
 import com.zup.keymanager.setup.options.*
 import javax.inject.Singleton

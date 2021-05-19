@@ -1,7 +1,7 @@
 package com.zup.keymanager.setup
 
-import com.zup.keymanager.pixkey.ErpClient
 import com.zup.keymanager.pixkey.PixKeyRepository
+import com.zup.keymanager.pixkey.clients.ErpClient
 import com.zup.keymanager.proto.PixKeyDeleteRequest
 import com.zup.keymanager.setup.options.*
 import javax.inject.Singleton
@@ -14,13 +14,13 @@ class PixKeyDeleteServiceTestSetup(
 
     fun options(
         repositoryOption: PixKeyRepositoryOption = PixKeyRepositoryOption.CLEAN_ALL,
-        scenarioOption: PixKeyDeleteScenarioOption = PixKeyDeleteScenarioOption.NOTHING
+        scenarioOption: PixKeyDeleteScenarioOption = PixKeyDeleteScenarioOption.VALID_REQUEST_FOR_REGISTERED_PIX_KEY
     ): PixKeyDeleteRequest {
 
         if (repositoryOption.isChosen())
             repositoryOption.apply(repository)
 
-        return scenarioOption.apply(repository)!!
+        return scenarioOption.apply(repository)
     }
 
 }

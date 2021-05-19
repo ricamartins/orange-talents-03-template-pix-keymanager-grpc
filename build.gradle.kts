@@ -45,10 +45,12 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.mockito:mockito-core")
 
+    implementation("io.micronaut.xml:micronaut-jackson-xml")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("io.micronaut:micronaut-http-client:2.5.2")
 
     implementation("io.micronaut:micronaut-validation")
+//    implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator:3.0.0")
     implementation("org.hibernate:hibernate-validator:6.1.6.Final")
 
     implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.11")

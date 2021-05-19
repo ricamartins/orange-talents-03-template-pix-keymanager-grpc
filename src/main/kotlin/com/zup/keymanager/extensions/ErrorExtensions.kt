@@ -17,8 +17,8 @@ fun Throwable.toStatusException(): StatusRuntimeException {
 fun Set<ConstraintViolation<*>>.toFieldErrors(): String {
     return ObjectMapper().writeValueAsString(this.map { "${it.field()}: ${it.message}"})
 }
-
-private fun ConstraintViolation<*>.field() = this.propertyPath.iterator().asSequence().last().toString()
+//iterator().asSequence().
+private fun ConstraintViolation<*>.field() = this.propertyPath.last().toString()
 
 infix fun Status.with(message: String): StatusRuntimeException {
     return this.withDescription(message).asRuntimeException()

@@ -36,6 +36,7 @@ class PixKeyCreateRequestValidator(val repository: PixKeyRepository) : CustomSta
             KeyType.PHONE -> validatePhone(keyValue)
             KeyType.EMAIL -> validateEmail(keyValue)
             KeyType.RANDOM -> validateRandom(keyValue)
+            else -> throw Status.INVALID_ARGUMENT with "keyType: Invalid value for key type"
         }
     }
 
