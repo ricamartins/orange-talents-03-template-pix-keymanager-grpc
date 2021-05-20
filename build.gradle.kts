@@ -27,7 +27,9 @@ micronaut {
 
 dependencies {
     annotationProcessor("io.micronaut:micronaut-inject-java:2.5.3")
+    implementation("io.micronaut:micronaut-aop:2.5.3")
     kapt("io.micronaut.data:micronaut-data-processor")
+
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
     implementation("io.micronaut.grpc:micronaut-grpc-runtime")
@@ -53,7 +55,7 @@ dependencies {
 //    implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator:3.0.0")
     implementation("org.hibernate:hibernate-validator:6.1.6.Final")
 
-    implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.11")
+//    implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.11")
 }
 
 

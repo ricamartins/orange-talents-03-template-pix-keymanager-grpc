@@ -7,6 +7,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType.APPLICATION_XML
 import io.micronaut.http.annotation.*
 import io.micronaut.http.client.annotation.Client
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import javax.inject.Singleton
 
 @Client("\${client.bcb.url}")
@@ -24,18 +25,40 @@ interface BcbClient {
 class BcbClientHandler(val client: BcbClient) {
 
     fun create(request: BcbCreatePixKeyRequest): BcbCreatePixKeyRequest {
-        return client.create(request).body()!!
+        try {
+
+            val response = client.create(request)
+
+            if (response.status == HttpStatus.NOT_FOUND)
+                throw Status.NOT_FOUND with "Pix key not registered in the central bank"
+
+            return response.body()!!
+
+        } catch (e: HttpClientResponseException) {
+            when(e.status) {
+                HttpStatus.UNPROCESSABLE_ENTITY -> throw Status.ALREADY_EXISTS with "Pix key already registered at the Central Bank"
+                else -> throw Status.INTERNAL with "Failed to get a response from the Central Bank"
+            }
+        }
     }
 
     fun delete(request: BcbDeletePixKeyRequest): BcbDeletePixKeyRequest {
-        val response = client.delete(request.key, request)
+        try {
 
-        if (response.status == HttpStatus.NOT_FOUND)
-            throw Status.NOT_FOUND with "Pix key not registered in the central bank"
+            val response = client.delete(request.key, request)
 
-        return response.body()!!
+            if (response.status == HttpStatus.NOT_FOUND)
+                throw Status.NOT_FOUND with "Pix key not registered in the central bank"
+
+            return response.body()!!
+
+        } catch (e: HttpClientResponseException) {
+            when(e.status) {
+                HttpStatus.FORBIDDEN -> throw Status.PERMISSION_DENIED with "Client can not delete this pix key"
+                else -> throw Status.INTERNAL with "Failed to get a response from the Central Bank"
+            }
+        }
     }
-
 
 }
 

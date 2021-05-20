@@ -23,6 +23,7 @@ interface ErpClient {
 class ErpClientHandler(private val client: ErpClient) {
 
     fun getAccountDetails(request: PixKeyCreateRequest): AccountDetailsResponse {
+
         val response = client.getAccountDetails(request.clientId, request.accountType.translate())
 
         if (response.status == HttpStatus.NOT_FOUND)

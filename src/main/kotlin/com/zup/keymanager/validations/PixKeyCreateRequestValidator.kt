@@ -1,6 +1,7 @@
 package com.zup.keymanager.validations
 
 import com.zup.keymanager.extensions.with
+import com.zup.keymanager.handler.Validator
 import com.zup.keymanager.pixkey.PixKeyRepository
 import com.zup.keymanager.proto.PixKeyCreateRequest
 import com.zup.keymanager.proto.PixKeyCreateRequest.KeyType
@@ -15,14 +16,12 @@ import javax.validation.constraints.NotNull
 import javax.validation.constraints.Size
 
 @Validated @Singleton
-class PixKeyCreateRequestValidator(val repository: PixKeyRepository) : CustomStatusValidator<PixKeyCreateRequest> {
+class PixKeyCreateRequestValidator(val repository: PixKeyRepository) : Validator<PixKeyCreateRequest> {
 
-    override fun validateIllegalArguments(target: PixKeyCreateRequest) {
+    override fun validate(target: PixKeyCreateRequest) {
         validateIllegalArguments(target.clientId, target.keyType, target.keyValue, target.accountType)
-    }
-
-    override fun customStatusValidations(target: PixKeyCreateRequest): List<() -> Unit> {
-        return listOf { validateUniqueKey(target.keyValue) }
+        validateKeyValue(target.keyType, target.keyValue)
+        validateUniqueKey(target.keyValue)
     }
 
     fun validateIllegalArguments(
@@ -30,7 +29,9 @@ class PixKeyCreateRequestValidator(val repository: PixKeyRepository) : CustomSta
         @NotNull @ValidKeyType keyType: KeyType,
         @Size(max=77) keyValue: String,
         @NotNull @ValidAccountType accountType: PixKeyCreateRequest.AccountType
-    ) {
+    ) {}
+
+    fun validateKeyValue(keyType: KeyType, keyValue: String) {
         when(keyType) {
             KeyType.DOCUMENT -> validateDocument(keyValue)
             KeyType.PHONE -> validatePhone(keyValue)

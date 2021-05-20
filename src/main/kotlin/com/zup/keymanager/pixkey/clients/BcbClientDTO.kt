@@ -19,22 +19,6 @@ data class BcbCreatePixKeyRequest(
             owner.name
         )
     }
-//    constructor(newRequest: PixKeyCreateRequest, accountDetails: AccountDetailsResponse)
-//            : this(
-//                newRequest.keyType.toBcbKeyType(),
-//                newRequest.keyValue,
-//                BcbBankAccountRequest(
-//                    BcbBankAccountRequest.ITAU_PARTICIPANT,
-//                    accountDetails.branch,
-//                    accountDetails.number,
-//                    newRequest.accountType.toBcbAccountType()
-//                ),
-//                BcbOwnerRequest(
-//                    BcbOwnerRequest.PersonType.NATURAL_PERSON,
-//                    accountDetails.ownerDetails.name,
-//                    accountDetails.ownerDetails.document
-//                )
-//            )
 
     enum class KeyType { CPF, CNPJ, PHONE, EMAIL, RANDOM }
 }

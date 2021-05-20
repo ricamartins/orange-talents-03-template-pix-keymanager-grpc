@@ -10,6 +10,7 @@ package com.zup.keymanager.proto;
 service PixKeyService {
   rpc create (PixKeyCreateRequest) returns (PixKeyCreateResponse) {}
   rpc delete (PixKeyDeleteRequest) returns (Void) {}
+//  rpc info (PixKeyInfoRequest) returns (PixKeyInfoResponse) {}
 }
 
 message PixKeyCreateRequest {
@@ -44,6 +45,41 @@ message PixKeyDeleteRequest {
 }
 
 message Void {}
+
+//message PixKeyInfoRequest {
+//  oneof request {
+//    string keyValue = 1;
+//    PixKeyInfoPair infoPair = 2;
+//  }
+//
+//  message PixKeyInfoPair {
+//    string clientId = 1;
+//    string pixId = 2;
+//  }
+//}
+//
+//message PixKeyInfoResponse {
+//  string pixId = 1;
+//  string clientId = 2;
+//  KeyType keyType = 3;
+//  AccountType accountType = 4;
+//  string owner = 5;
+//
+//  enum KeyType {
+//  UNKNOWN_KEY_TYPE = 0;
+//      DOCUMENT = 1;
+//      PHONE = 2;
+//      EMAIL = 3;
+//      RANDOM = 4;
+//  }
+//
+//  enum AccountType {
+//    UNKNOWN_ACCOUNT_TYPE = 0;
+//    CHECKING = 1;
+//    SAVINGS = 2;
+//  }
+//
+//}
 
 //For client usage only, unfortunately
 message PixKeyResult {

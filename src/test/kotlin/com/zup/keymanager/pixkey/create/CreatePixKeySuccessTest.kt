@@ -14,6 +14,7 @@ import io.micronaut.test.annotation.MockBean
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -25,6 +26,9 @@ class CreatePixKeySuccessTest(
     private val erpClient: ErpClient,
     private val bcbClient: BcbClient
 ) {
+
+    @BeforeEach
+    fun cleanUp() { repository.deleteAll() }
 
     @Test
     fun `should register pix key with valid document key type`() {
