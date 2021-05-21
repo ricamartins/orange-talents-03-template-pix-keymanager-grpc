@@ -2,16 +2,16 @@ package com.zup.keymanager.pixkey
 
 import com.zup.keymanager.extensions.*
 import com.zup.keymanager.handler.ErrorHandler
+import com.zup.keymanager.handler.Validated
 import com.zup.keymanager.pixkey.clients.BcbClientHandler
 import com.zup.keymanager.pixkey.clients.BcbDeletePixKeyRequest
 import com.zup.keymanager.pixkey.clients.ErpClientHandler
 import com.zup.keymanager.proto.*
 import com.zup.keymanager.proto.PixKeyServiceGrpc.PixKeyServiceImplBase
-import io.grpc.Status
 import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
 
-@GrpcService @ErrorHandler
+@GrpcService @ErrorHandler @Validated
 class PixKeyService(
     private val erpClient: ErpClientHandler,
     private val bcbClient: BcbClientHandler,

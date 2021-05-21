@@ -8,6 +8,7 @@ import com.zup.keymanager.proto.PixKeyCreateRequest
 import com.zup.keymanager.proto.KeyType
 import com.zup.keymanager.validations.annotations.*
 import io.grpc.Status
+import io.micronaut.core.beans.BeanIntrospection
 import io.micronaut.validation.Validated
 import org.hibernate.validator.constraints.br.CPF
 import javax.inject.Singleton
