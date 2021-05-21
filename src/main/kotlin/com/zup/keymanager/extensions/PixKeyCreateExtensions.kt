@@ -13,7 +13,8 @@ fun PixKeyCreateRequest.toPixKey(key: String, accountDetailsResponse: AccountDet
         key,
         PixKey.KeyType.valueOf(keyType.name),
         PixKey.AccountType.valueOf(accountType.name),
-        accountDetailsResponse.toAccountDetails()
+        accountDetailsResponse.toAccountDetails(),
+        accountDetailsResponse.ownerDetails.toOwnerDetails()
     )
 }
 
@@ -24,7 +25,8 @@ fun PixKeyCreateRequest.toPixKey(bcbResponse: BcbCreatePixKeyRequest): PixKey {
         bcbResponse.key,
         PixKey.KeyType.valueOf(keyType.name),
         PixKey.AccountType.valueOf(accountType.name),
-        bcbResponse.toAccountDetails()
+        bcbResponse.toAccountDetails(),
+        bcbResponse.toOwnerDetails()
     )
 }
 
@@ -44,32 +46,6 @@ fun PixKeyCreateRequest.toBcbCreatePixKeyRequest(accountDetailsResponse: Account
             accountDetailsResponse.ownerDetails.document
         )
     )
-}
-
-fun PixKeyCreateRequest.KeyType.toBcbKeyType(): BcbCreatePixKeyRequest.KeyType {
-    return when(this) {
-        PixKeyCreateRequest.KeyType.DOCUMENT -> BcbCreatePixKeyRequest.KeyType.CPF
-        PixKeyCreateRequest.KeyType.PHONE -> BcbCreatePixKeyRequest.KeyType.PHONE
-        PixKeyCreateRequest.KeyType.EMAIL -> BcbCreatePixKeyRequest.KeyType.EMAIL
-        PixKeyCreateRequest.KeyType.RANDOM -> BcbCreatePixKeyRequest.KeyType.RANDOM
-        else -> throw Status.ABORTED with "Validation process went wrong"
-    }
-}
-
-fun PixKeyCreateRequest.AccountType.toBcbAccountType(): BcbBankAccountRequest.AccountType {
-    return when(this) {
-        PixKeyCreateRequest.AccountType.CHECKING -> BcbBankAccountRequest.AccountType.CACC
-        PixKeyCreateRequest.AccountType.SAVINGS -> BcbBankAccountRequest.AccountType.SVGS
-        else -> throw Status.ABORTED with "Validation process went wrong"
-    }
-}
-
-fun PixKeyCreateRequest.AccountType.translate(): String {
-    return when (this) {
-        PixKeyCreateRequest.AccountType.CHECKING -> "CONTA_CORRENTE"
-        PixKeyCreateRequest.AccountType.SAVINGS -> "CONTA_POUPANCA"
-        else -> throw Status.ABORTED with "Validation process went wrong"
-    }
 }
 
 fun toPixKeyCreateResponse(pixKey: PixKey): PixKeyCreateResponse {

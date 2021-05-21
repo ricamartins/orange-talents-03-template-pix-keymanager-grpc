@@ -19,10 +19,12 @@ interface BcbClient {
     @Delete("/keys/{key}") @Produces(APPLICATION_XML) @Consumes(APPLICATION_XML)
     fun delete(@PathVariable key: String, @Body request: BcbDeletePixKeyRequest): HttpResponse<BcbDeletePixKeyRequest>
 
+    @Get("/keys/{key}") @Produces(APPLICATION_XML) @Consumes(APPLICATION_XML)
+    fun getKey(@PathVariable key: String): HttpResponse<BcbCreatePixKeyRequest>
 }
 
 @Singleton
-class BcbClientHandler(val client: BcbClient) {
+class BcbClientHandler(private val client: BcbClient) {
 
     fun create(request: BcbCreatePixKeyRequest): BcbCreatePixKeyRequest {
         try {
@@ -60,5 +62,19 @@ class BcbClientHandler(val client: BcbClient) {
         }
     }
 
+    fun getKey(key: String): BcbCreatePixKeyRequest {
+        try {
+
+            val response = client.getKey(key)
+
+            if (response.status == HttpStatus.NOT_FOUND)
+                throw Status.NOT_FOUND with "Pix key not registered in the central bank"
+
+            return response.body()!!
+
+        } catch (e: HttpClientResponseException) {
+            throw Status.INTERNAL with "Failed to get a response from the Central Bank"
+        }
+    }
 }
 

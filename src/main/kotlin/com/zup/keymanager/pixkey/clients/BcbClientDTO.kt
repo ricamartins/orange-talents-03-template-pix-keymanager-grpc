@@ -1,6 +1,7 @@
 package com.zup.keymanager.pixkey.clients
 
 import com.zup.keymanager.pixkey.AccountDetails
+import com.zup.keymanager.pixkey.OwnerDetails
 import com.zup.keymanager.pixkey.PixKey
 
 data class BcbCreatePixKeyRequest(
@@ -12,12 +13,11 @@ data class BcbCreatePixKeyRequest(
 ) {
 
     fun toAccountDetails(): AccountDetails  {
-        return AccountDetails(
-            bankAccount.branch,
-            bankAccount.accountNumber,
-            bankAccount.participant,
-            owner.name
-        )
+        return AccountDetails(bankAccount.branch, bankAccount.accountNumber, bankAccount.participant)
+    }
+
+    fun toOwnerDetails(): OwnerDetails {
+        return OwnerDetails(owner.name, owner.taxIdNumber)
     }
 
     enum class KeyType { CPF, CNPJ, PHONE, EMAIL, RANDOM }

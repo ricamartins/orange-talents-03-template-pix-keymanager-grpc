@@ -2,23 +2,20 @@ package com.zup.keymanager.setup
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.zup.keymanager.extensions.formatted
-import com.zup.keymanager.proto.PixKeyCreateRequest
-import com.zup.keymanager.proto.PixKeyCreateResponse
-import com.zup.keymanager.proto.PixKeyDeleteRequest
-import com.zup.keymanager.proto.PixKeyResult
+import com.zup.keymanager.proto.*
 import com.zup.keymanager.proto.PixKeyResult.Failure
 import com.zup.keymanager.proto.PixKeyResult.Success
 import com.zup.keymanager.proto.PixKeyServiceGrpc.*
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import javax.inject.Singleton
-import com.zup.keymanager.proto.Void
 
 @Singleton
 class GrpcClientHandler(private val client: PixKeyServiceBlockingStub) {
 
     fun create(request: PixKeyCreateRequest): PixKeyResult = runAndConvert { client.create(request) }
     fun delete(request: PixKeyDeleteRequest): PixKeyResult = runAndConvert { client.delete(request) }
+    fun info(request: PixKeyInfoRequest): PixKeyResult = runAndConvert { client.info(request) }
 
     private fun <R> runAndConvert(call: () -> R): PixKeyResult {
         return with(PixKeyResult.newBuilder()) {
@@ -27,6 +24,7 @@ class GrpcClientHandler(private val client: PixKeyServiceBlockingStub) {
                 status = "0 OK"
                 when (response) {
                     is PixKeyCreateResponse -> success = Success.newBuilder().setCreateResponse(response).build()
+                    is PixKeyInfoResponse -> success = Success.newBuilder().setInfoResponse(response).build()
                     is Void -> success = Success.newBuilder().build()
                 }
             } catch (e: StatusRuntimeException) {
