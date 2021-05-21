@@ -16,6 +16,7 @@ class GrpcClientHandler(private val client: PixKeyServiceBlockingStub) {
     fun create(request: PixKeyCreateRequest): PixKeyResult = runAndConvert { client.create(request) }
     fun delete(request: PixKeyDeleteRequest): PixKeyResult = runAndConvert { client.delete(request) }
     fun info(request: PixKeyInfoRequest): PixKeyResult = runAndConvert { client.info(request) }
+    fun list(request: PixKeyListRequest): PixKeyResult = runAndConvert { client.list(request) }
 
     private fun <R> runAndConvert(call: () -> R): PixKeyResult {
         return with(PixKeyResult.newBuilder()) {
@@ -25,6 +26,7 @@ class GrpcClientHandler(private val client: PixKeyServiceBlockingStub) {
                 when (response) {
                     is PixKeyCreateResponse -> success = Success.newBuilder().setCreateResponse(response).build()
                     is PixKeyInfoResponse -> success = Success.newBuilder().setInfoResponse(response).build()
+                    is PixKeyListResponse -> success = Success.newBuilder().setListResponse(response).build()
                     is Void -> success = Success.newBuilder().build()
                 }
             } catch (e: StatusRuntimeException) {

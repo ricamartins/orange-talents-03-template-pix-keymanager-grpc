@@ -47,4 +47,10 @@ class PixKeyService(
         }.let(observer::onNext).also { observer.onCompleted() }
     }
 
+    override fun list(request: PixKeyListRequest, observer: StreamObserver<PixKeyListResponse>) {
+        repository.findAllByClientId(request.clientId)
+            .map(::toPixKeyInfoResponseShort)
+            .let(::toPixKeyListResponse)
+            .let(observer::onNext).also { observer.onCompleted() }
+    }
 }

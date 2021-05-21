@@ -11,6 +11,7 @@ service PixKeyService {
   rpc create (PixKeyCreateRequest) returns (PixKeyCreateResponse) {}
   rpc delete (PixKeyDeleteRequest) returns (Void) {}
   rpc info (PixKeyInfoRequest) returns (PixKeyInfoResponse) {}
+  rpc list (PixKeyListRequest) returns (PixKeyListResponse) {}
 }
 
 enum KeyType {
@@ -81,6 +82,14 @@ message AccountDetails {
   AccountType accountType = 4;
 }
 
+message PixKeyListRequest {
+  string clientId = 1;
+}
+
+message PixKeyListResponse {
+  repeated PixKeyInfoResponse pixKeys = 1;
+}
+
 //For client usage only, unfortunately
 message PixKeyResult {
   string status = 1;
@@ -94,6 +103,7 @@ message PixKeyResult {
     oneof response {
       PixKeyCreateResponse createResponse = 2;
       PixKeyInfoResponse infoResponse = 3;
+      PixKeyListResponse listResponse = 4;
     }
   }
 

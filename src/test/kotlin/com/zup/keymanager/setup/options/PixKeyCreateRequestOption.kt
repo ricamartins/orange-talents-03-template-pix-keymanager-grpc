@@ -68,29 +68,32 @@ enum class PixKeyCreateRequestOption {
 
     abstract fun apply(): PixKeyCreateRequest
 
-    fun create(
-        clientId: String? = null,
-        keyType: KeyType? = null,
-        keyValue: String? = null,
-        accountType: AccountType? = null,
-        others: OtherFields = OtherFields.ANY_VALID
-    ): PixKeyCreateRequest {
-        val builder = PixKeyCreateRequest.newBuilder()
-        when(others) {
-            OtherFields.ANY_VALID -> {
-                if (clientId != null) builder.clientId = clientId else builder.clientId = UUID.randomUUID().toString()
-                if (keyType != null) builder.keyType = keyType else builder.keyType = KeyType.RANDOM
-                if (keyValue != null) builder.keyValue = keyValue else builder.keyValue = ""
-                if (accountType != null) builder.accountType = accountType else builder.accountType = AccountType.CHECKING
+    companion object {
+
+        fun create(
+            clientId: String? = null,
+            keyType: KeyType? = null,
+            keyValue: String? = null,
+            accountType: AccountType? = null,
+            others: OtherFields = OtherFields.ANY_VALID
+        ): PixKeyCreateRequest {
+            val builder = PixKeyCreateRequest.newBuilder()
+            when(others) {
+                OtherFields.ANY_VALID -> {
+                    if (clientId != null) builder.clientId = clientId else builder.clientId = UUID.randomUUID().toString()
+                    if (keyType != null) builder.keyType = keyType else builder.keyType = KeyType.RANDOM
+                    if (keyValue != null) builder.keyValue = keyValue else builder.keyValue = ""
+                    if (accountType != null) builder.accountType = accountType else builder.accountType = AccountType.CHECKING
+                }
+                OtherFields.EMPTY -> {
+                    if (clientId != null) builder.clientId = clientId
+                    if (keyType != null) builder.keyType = keyType
+                    if (keyValue != null) builder.keyValue = keyValue
+                    if (accountType != null) builder.accountType = accountType
+                }
             }
-            OtherFields.EMPTY -> {
-                if (clientId != null) builder.clientId = clientId
-                if (keyType != null) builder.keyType = keyType
-                if (keyValue != null) builder.keyValue = keyValue
-                if (accountType != null) builder.accountType = accountType
-            }
+            return builder.build()
         }
-        return builder.build()
     }
 }
 

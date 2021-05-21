@@ -3,10 +3,7 @@ package com.zup.keymanager.extensions
 import com.zup.keymanager.pixkey.Institutions
 import com.zup.keymanager.pixkey.PixKey
 import com.zup.keymanager.pixkey.clients.BcbCreatePixKeyRequest
-import com.zup.keymanager.proto.AccountDetails
-import com.zup.keymanager.proto.OwnerDetails
-import com.zup.keymanager.proto.PixKeyInfoRequest
-import com.zup.keymanager.proto.PixKeyInfoResponse
+import com.zup.keymanager.proto.*
 
 fun toPixKeyInfoResponse(
     bcbResponse: BcbCreatePixKeyRequest,
@@ -47,4 +44,21 @@ fun toPixKeyInfoResponse(pixKey: PixKey): PixKeyInfoResponse {
         createdAt = pixKey.createdAt.toString()
         build()
     }
+}
+
+fun toPixKeyInfoResponseShort(pixKey: PixKey): PixKeyInfoResponse {
+    return with(PixKeyInfoResponse.newBuilder()) {
+        clientId = pixKey.clientId
+        pixId = pixKey.id
+        keyValue = pixKey.keyValue
+        keyType = toResponseKeyType(pixKey.keyType)
+        account = AccountDetails.newBuilder()
+            .setAccountType(toResponseAccountType(pixKey.accountType)).build()
+        createdAt = pixKey.createdAt.toString()
+        build()
+    }
+}
+
+fun toPixKeyListResponse(pixKeys: List<PixKeyInfoResponse>): PixKeyListResponse {
+    return PixKeyListResponse.newBuilder().addAllPixKeys(pixKeys).build()
 }
