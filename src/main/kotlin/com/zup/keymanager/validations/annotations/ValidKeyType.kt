@@ -6,13 +6,18 @@ import io.micronaut.validation.validator.constraints.ConstraintValidator
 import io.micronaut.validation.validator.constraints.ConstraintValidatorContext
 import javax.inject.Singleton
 import javax.validation.Constraint
-import kotlin.annotation.AnnotationRetention.*
+import javax.validation.Payload
+import kotlin.annotation.AnnotationRetention.RUNTIME
 import kotlin.annotation.AnnotationTarget.*
+import kotlin.reflect.KClass
 
 @Constraint(validatedBy=[ValidKeyTypeValidator::class])
 @Retention(RUNTIME)
 @Target(FIELD, VALUE_PARAMETER, CONSTRUCTOR)
-annotation class ValidKeyType(val message: String = "Must be a valid key type")
+annotation class ValidKeyType(val message: String = "Must be a valid key type",
+                              val groups: Array<KClass<*>> = [],
+                              val payload: Array<KClass<out Payload>> = []
+)
 
 @Singleton
 class ValidKeyTypeValidator : ConstraintValidator<ValidKeyType, KeyType> {

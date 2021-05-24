@@ -19,10 +19,7 @@ class ValidatorInterceptor(private val applicationContext: ApplicationContext): 
 
     override fun intercept(context: MethodInvocationContext<BindableService, Any>): Any? {
 
-        if (isNotGrpcService(context.targetMethod.declaringClass))
-            return context.proceed()
-
-        if (isNotGrpcEndpoint(context.parameterValues))
+        if (!canValidate(context))
             return context.proceed()
 
         val request = context.parameterValues[0]
@@ -58,11 +55,15 @@ class ValidatorInterceptor(private val applicationContext: ApplicationContext): 
         return applicationContext.createBean(definition.beanType) as Validator<Any>
     }
 
-    private fun isNotGrpcService(declaringClass: Class<*>): Boolean {
-        return !BindableService::class.java.isAssignableFrom(declaringClass)
+    private fun canValidate(context: MethodInvocationContext<BindableService, Any>): Boolean {
+        return isGrpcService(context.targetMethod.declaringClass) && isGrpcEndpoint(context.parameterValues)
     }
 
-    private fun isNotGrpcEndpoint(parameters: Array<Any>): Boolean {
-        return parameters.size != 2 || parameters[1] !is StreamObserver<*>
+    private fun isGrpcService(declaringClass: Class<*>): Boolean {
+        return BindableService::class.java.isAssignableFrom(declaringClass)
+    }
+
+    private fun isGrpcEndpoint(parameters: Array<Any>): Boolean {
+        return parameters.size == 2 || parameters[1] is StreamObserver<*>
     }
 }

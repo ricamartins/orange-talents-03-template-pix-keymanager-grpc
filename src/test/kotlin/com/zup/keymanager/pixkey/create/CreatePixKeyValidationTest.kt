@@ -1,16 +1,32 @@
 package com.zup.keymanager.pixkey.create
 
+import com.zup.keymanager.annotator.annotateProtoClasses
 import com.zup.keymanager.setup.GrpcClientHandler
 import com.zup.keymanager.setup.options.PixKeyCreateRequestOption.*
+import com.zup.keymanager.validations.annotations.ValidKeyValue
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 @MicronautTest(transactional=false)
 class CreatePixKeyValidationTest(
     private val grpcClient: GrpcClientHandler,
 ) {
+
+    companion object {
+        var executado = false
+    }
+
+    @BeforeEach
+    fun annotate() {
+        if(!executado) {
+            annotateProtoClasses()
+            executado = true
+        }
+    }
 
     @Test
     fun `should return error message when client id is invalid UUID`() {
@@ -57,7 +73,7 @@ class CreatePixKeyValidationTest(
             assertTrue(hasFailure())
             assertEquals("3 INVALID_ARGUMENT", status)
             assertEquals("keyValue", failure.errorsList[0].field)
-            assertEquals("size must be between 0 and 77", failure.errorsList[0].message)
+            assertEquals("tamanho deve ser entre 0 e 77", failure.errorsList[0].message)
         }
 
     }
@@ -73,8 +89,9 @@ class CreatePixKeyValidationTest(
             assertTrue(hasFailure())
             assertEquals("3 INVALID_ARGUMENT", status)
             assertEquals("keyValue", failure.errorsList[0].field)
-            //using micronaut validator
-            assertEquals("must match \"([0-9]{3}[.]?[0-9]{3}[.]?[0-9]{3}-[0-9]{2})|([0-9]{11})\"", failure.errorsList[0].message)
+            assertEquals("número do registro de contribuinte individual brasileiro (CPF) inválido", failure.errorsList[0].message)
+//            using micronaut validator
+//            assertEquals("must match \"([0-9]{3}[.]?[0-9]{3}[.]?[0-9]{3}-[0-9]{2})|([0-9]{11})\"", failure.errorsList[0].message)
         }
 
     }
@@ -106,7 +123,8 @@ class CreatePixKeyValidationTest(
             assertTrue(hasFailure())
             assertEquals("3 INVALID_ARGUMENT", status)
             assertEquals("keyValue", failure.errorsList[0].field)
-            assertEquals("must be a well-formed email address", failure.errorsList[0].message)
+            assertEquals("deve ser um endereço de e-mail bem formado", failure.errorsList[0].message)
+//            assertEquals("must be a well-formed email address", failure.errorsList[0].message)
         }
 
     }
@@ -114,9 +132,14 @@ class CreatePixKeyValidationTest(
     @Test
     fun `with random key type, should return error message when key value is not blank or null`() {
 
+//        annotateProtoClasses()
+
         val request = INVALID_KEY_VALUE_NOT_BLANK_FOR_RANDOM_TYPE.apply()
 
         val result = grpcClient.create(request)
+
+        request::class.java.declaredMethods.filter { it.isAnnotationPresent(ValidKeyValue::class.java) }
+            .forEach(::println)
 
         with (result) {
             assertTrue(hasFailure())

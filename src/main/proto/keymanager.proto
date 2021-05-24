@@ -3,7 +3,7 @@ syntax = "proto3";
 option java_multiple_files = true;
 option java_package = "com.zup.keymanager.proto";
 option java_outer_classname = "KeymanagerOuterClass";
-//option objc_class_prefix = "HLW";
+//annotations_package = "com.zup.keymanager.validations.annotations"
 
 package com.zup.keymanager.proto;
 
@@ -28,11 +28,11 @@ enum AccountType {
   SAVINGS = 2;
 }
 
-message PixKeyCreateRequest {
-  string clientId = 1;
-  KeyType keyType = 2;
-  string keyValue = 3;
-  AccountType accountType = 4;
+message PixKeyCreateRequest { //@ValidKeyValue
+  string clientId = 1; //@ValidUUID @NotBlank
+  KeyType keyType = 2; //@NotNull
+  string keyValue = 3; //@UniqueKeyValue @Size(max=77)
+  AccountType accountType = 4; //@NotNull @ValidAccountType
 }
 
 message PixKeyCreateResponse {
@@ -40,22 +40,22 @@ message PixKeyCreateResponse {
   string pixId = 2;
 }
 
-message PixKeyDeleteRequest {
-  string clientId = 1;
-  string pixId = 2;
+message PixKeyDeleteRequest { //@PixKeyOwner
+  string clientId = 1; //@ValidUUID @NotBlank
+  string pixId = 2; //@ValidUUID @NotBlank
 }
 
 message Void {}
 
-message PixKeyInfoRequest {
+message PixKeyInfoRequest { //@OneOf
   oneof request {
-    string keyValue = 1;
+    string keyValue = 1; //@NotBlank @Size(max=77)
     PixKeyInfoPair infoPair = 2;
   }
 
-  message PixKeyInfoPair {
-    string clientId = 1;
-    string pixId = 2;
+  message PixKeyInfoPair { //@PixKeyOwner
+    string clientId = 1; //@ValidUUID @NotBlank
+    string pixId = 2; //@ValidUUID @NotBlank
   }
 }
 
@@ -89,7 +89,7 @@ message PixKeyListResponse {
   repeated PixKeyInfoResponse pixKeys = 1;
 }
 
-//For client usage only, unfortunately
+//For client usage only
 message PixKeyResult {
   string status = 1;
   oneof result {

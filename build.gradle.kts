@@ -52,10 +52,14 @@ dependencies {
     implementation("io.micronaut:micronaut-http-client:2.5.2")
 
     implementation("io.micronaut:micronaut-validation")
-//    implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator:3.0.0")
+    implementation("io.micronaut.beanvalidation:micronaut-hibernate-validator:3.0.0")
     implementation("org.hibernate:hibernate-validator:6.1.6.Final")
 
 //    implementation("com.michael-bull.kotlin-result:kotlin-result:1.1.11")
+
+    //ByteBuddy
+    implementation("net.bytebuddy:byte-buddy-agent:1.11.0")
+    implementation("net.bytebuddy:byte-buddy:1.11.0")
 }
 
 

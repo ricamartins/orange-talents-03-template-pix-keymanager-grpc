@@ -8,6 +8,7 @@ import com.zup.keymanager.proto.*
 import com.zup.keymanager.proto.PixKeyServiceGrpc.PixKeyServiceImplBase
 import io.grpc.stub.StreamObserver
 import io.micronaut.grpc.annotation.GrpcService
+//import io.micronaut.validation.Validated
 
 @GrpcService @ErrorHandler @Validated
 class PixKeyService(
