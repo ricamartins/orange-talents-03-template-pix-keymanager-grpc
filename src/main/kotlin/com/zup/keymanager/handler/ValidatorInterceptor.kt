@@ -1,6 +1,7 @@
 package com.zup.keymanager.handler
 
 import io.grpc.BindableService
+import io.grpc.stub.StreamObserver
 import io.micronaut.aop.InterceptorBean
 import io.micronaut.aop.MethodInterceptor
 import io.micronaut.aop.MethodInvocationContext
@@ -18,9 +19,10 @@ class ValidatorInterceptor(private val applicationContext: ApplicationContext): 
 
     override fun intercept(context: MethodInvocationContext<BindableService, Any>): Any? {
 
-        // Just to be safe
-        // If someone annotates a class that is not a gRPC service, just return
         if (isNotGrpcService(context.targetMethod.declaringClass))
+            return context.proceed()
+
+        if (isNotGrpcEndpoint(context.parameterValues))
             return context.proceed()
 
         val request = context.parameterValues[0]
@@ -58,5 +60,9 @@ class ValidatorInterceptor(private val applicationContext: ApplicationContext): 
 
     private fun isNotGrpcService(declaringClass: Class<*>): Boolean {
         return !BindableService::class.java.isAssignableFrom(declaringClass)
+    }
+
+    private fun isNotGrpcEndpoint(parameters: Array<Any>): Boolean {
+        return parameters.size != 2 || parameters[1] !is StreamObserver<*>
     }
 }

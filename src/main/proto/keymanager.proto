@@ -33,7 +33,6 @@ message PixKeyCreateRequest {
   KeyType keyType = 2;
   string keyValue = 3;
   AccountType accountType = 4;
-
 }
 
 message PixKeyCreateResponse {
@@ -83,7 +82,7 @@ message AccountDetails {
 }
 
 message PixKeyListRequest {
-  string clientId = 1;
+  string clientId = 1; //@ValidUUID @NotBlank
 }
 
 message PixKeyListResponse {

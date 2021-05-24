@@ -15,6 +15,12 @@ class ErrorHandlerInterceptor: MethodInterceptor<BindableService, Any> {
 
     override fun intercept(context: MethodInvocationContext<BindableService, Any>): Any? {
 
+        if (isNotGrpcService(context.targetMethod.declaringClass))
+            return context.proceed()
+
+        if (isNotGrpcEndpoint(context.parameterValues))
+            return context.proceed()
+
         val observer = context.parameterValues[1] as StreamObserver<*>
 
         return try {
@@ -25,4 +31,11 @@ class ErrorHandlerInterceptor: MethodInterceptor<BindableService, Any> {
 
     }
 
+    private fun isNotGrpcService(declaringClass: Class<*>): Boolean {
+        return !BindableService::class.java.isAssignableFrom(declaringClass)
+    }
+
+    private fun isNotGrpcEndpoint(parameters: Array<Any>): Boolean {
+        return parameters.size != 2 || parameters[1] !is StreamObserver<*>
+    }
 }

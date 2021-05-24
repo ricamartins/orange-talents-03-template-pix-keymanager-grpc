@@ -3,9 +3,7 @@ package com.zup.keymanager.pixkey
 import com.zup.keymanager.extensions.*
 import com.zup.keymanager.handler.ErrorHandler
 import com.zup.keymanager.handler.Validated
-import com.zup.keymanager.pixkey.clients.BcbClientHandler
-import com.zup.keymanager.pixkey.clients.BcbDeletePixKeyRequest
-import com.zup.keymanager.pixkey.clients.ErpClientHandler
+import com.zup.keymanager.pixkey.clients.*
 import com.zup.keymanager.proto.*
 import com.zup.keymanager.proto.PixKeyServiceGrpc.PixKeyServiceImplBase
 import io.grpc.stub.StreamObserver
@@ -43,7 +41,8 @@ class PixKeyService(
         } else {
             repository.findByKeyValue(request.keyValue)
             .map(::toPixKeyInfoResponse)
-            .orElseGet { bcbClient.getKey(request.keyValue).let(::toPixKeyInfoResponse) }
+            .orElseGet { bcbClient.getKey(request.keyValue)
+            .let(::toPixKeyInfoResponse) }
         }.let(observer::onNext).also { observer.onCompleted() }
     }
 
@@ -53,4 +52,5 @@ class PixKeyService(
             .let(::toPixKeyListResponse)
             .let(observer::onNext).also { observer.onCompleted() }
     }
+
 }
