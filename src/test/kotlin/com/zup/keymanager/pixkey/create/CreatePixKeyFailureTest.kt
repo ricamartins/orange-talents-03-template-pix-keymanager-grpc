@@ -6,6 +6,7 @@ import com.zup.keymanager.pixkey.PixKeyRepository
 import com.zup.keymanager.pixkey.clients.BcbClient
 import com.zup.keymanager.pixkey.clients.ErpClient
 import com.zup.keymanager.setup.GrpcClientHandler
+import com.zup.keymanager.setup.ProtoAnnotatorExtension
 import com.zup.keymanager.setup.options.AccountDetailsResponseOption
 import com.zup.keymanager.setup.options.PixKeyCreateRequestOption.VALID_WITH_RANDOM_KEY_TYPE
 import com.zup.keymanager.setup.options.PixKeyCreateScenarioOption.PIX_KEY_CREATE_REQUEST_PIX_KEY_ALREADY_REGISTERED
@@ -16,10 +17,12 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
 @MicronautTest(transactional=false)
+@ExtendWith(ProtoAnnotatorExtension::class)
 class CreatePixKeyFailureTest(
     private val repository: PixKeyRepository,
     private val grpcClient: GrpcClientHandler,

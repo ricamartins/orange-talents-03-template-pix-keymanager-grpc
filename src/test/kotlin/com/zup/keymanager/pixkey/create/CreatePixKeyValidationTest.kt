@@ -1,32 +1,20 @@
 package com.zup.keymanager.pixkey.create
 
-import com.zup.keymanager.annotator.annotateProtoClasses
 import com.zup.keymanager.setup.GrpcClientHandler
+import com.zup.keymanager.setup.ProtoAnnotatorExtension
 import com.zup.keymanager.setup.options.PixKeyCreateRequestOption.*
 import com.zup.keymanager.validations.annotations.ValidKeyValue
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
 @MicronautTest(transactional=false)
+@ExtendWith(ProtoAnnotatorExtension::class)
 class CreatePixKeyValidationTest(
     private val grpcClient: GrpcClientHandler,
 ) {
-
-    companion object {
-        var executado = false
-    }
-
-    @BeforeEach
-    fun annotate() {
-        if(!executado) {
-            annotateProtoClasses()
-            executado = true
-        }
-    }
 
     @Test
     fun `should return error message when client id is invalid UUID`() {

@@ -4,6 +4,7 @@ import com.zup.keymanager.pixkey.PixKeyRepository
 import com.zup.keymanager.pixkey.clients.BcbClient
 import com.zup.keymanager.pixkey.clients.BcbDeletePixKeyRequest
 import com.zup.keymanager.setup.GrpcClientHandler
+import com.zup.keymanager.setup.ProtoAnnotatorExtension
 import com.zup.keymanager.setup.options.PixKeyDeleteScenarioOption
 import com.zup.keymanager.setup.options.PixKeyDeleteScenarioOption.INVALID_REQUEST_NOT_FOUND
 import com.zup.keymanager.setup.options.PixKeyDeleteScenarioOption.INVALID_REQUEST_NOT_OWNER
@@ -15,9 +16,11 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
 
 @MicronautTest(transactional=false)
+@ExtendWith(ProtoAnnotatorExtension::class)
 class DeletePixKeyFailureTest(
     private val repository: PixKeyRepository,
     private val grpcClient: GrpcClientHandler,

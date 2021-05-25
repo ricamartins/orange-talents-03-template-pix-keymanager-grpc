@@ -16,7 +16,7 @@ enum class PixKeyInfoScenarioOption {
 
     VALID_PIX_KEY_WITH_INFO_PAIR {
         override fun apply(repository: PixKeyRepository, bcbClient: BcbClient): PixKeyInfoRequest {
-            val createRequest = PixKeyCreateRequestOption.VALID_WITH_RANDOM_KEY_TYPE.apply()
+            val createRequest = PixKeyCreateRequestOption.VALID_WITH_DOCUMENT_KEY_TYPE.apply()
             val bcbResponse = createRequest.toBcbCreatePixKeyRequest(AccountDetailsResponseOption.ANY.apply())
             val pixKey = repository.save(createRequest.toPixKey(bcbResponse))
             return pixKey.toPixKeyInfoRequestInfoPair()
@@ -36,7 +36,26 @@ enum class PixKeyInfoScenarioOption {
             val bcbResponse = createRequest.toBcbCreatePixKeyRequest(AccountDetailsResponseOption.ANY.apply())
             val pixKey = repository.save(createRequest.toPixKey(bcbResponse))
             Mockito.`when`(bcbClient.getKey(pixKey.keyValue)).thenReturn(HttpResponse.ok(bcbResponse))
-            repository.deleteById(pixKey.id)
+            repository.delete(pixKey)
+            return pixKey.toPixKeyInfoRequestKeyValue()
+        }
+    },
+    INVALID_PIX_KEY_WITH_INFO_PAIR {
+        override fun apply(repository: PixKeyRepository, bcbClient: BcbClient): PixKeyInfoRequest {
+            val createRequest = PixKeyCreateRequestOption.VALID_WITH_DOCUMENT_KEY_TYPE.apply()
+            val bcbResponse = createRequest.toBcbCreatePixKeyRequest(AccountDetailsResponseOption.ANY.apply())
+            val pixKey = repository.save(createRequest.toPixKey(bcbResponse))
+            repository.delete(pixKey)
+            return pixKey.toPixKeyInfoRequestInfoPair()
+        }
+    },
+    INVALID_PIX_KEY_WITH_KEY_VALUE {
+        override fun apply(repository: PixKeyRepository, bcbClient: BcbClient): PixKeyInfoRequest {
+            val createRequest = PixKeyCreateRequestOption.VALID_WITH_DOCUMENT_KEY_TYPE.apply()
+            val bcbResponse = createRequest.toBcbCreatePixKeyRequest(AccountDetailsResponseOption.ANY.apply())
+            val pixKey = repository.save(createRequest.toPixKey(bcbResponse))
+            Mockito.`when`(bcbClient.getKey(pixKey.keyValue)).thenReturn(HttpResponse.notFound())
+            repository.delete(pixKey)
             return pixKey.toPixKeyInfoRequestKeyValue()
         }
     };

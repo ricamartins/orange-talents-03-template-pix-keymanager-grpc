@@ -7,6 +7,7 @@ import com.zup.keymanager.pixkey.clients.BcbClient
 import com.zup.keymanager.pixkey.clients.ErpClient
 import com.zup.keymanager.proto.PixKeyCreateRequest
 import com.zup.keymanager.setup.GrpcClientHandler
+import com.zup.keymanager.setup.ProtoAnnotatorExtension
 import com.zup.keymanager.setup.options.AccountDetailsResponseOption
 import com.zup.keymanager.setup.options.PixKeyCreateRequestOption.*
 import io.micronaut.http.HttpResponse
@@ -16,10 +17,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
 @MicronautTest(transactional=false)
+@ExtendWith(ProtoAnnotatorExtension::class)
 class CreatePixKeySuccessTest(
     private val repository: PixKeyRepository,
     private val grpcClient: GrpcClientHandler,
